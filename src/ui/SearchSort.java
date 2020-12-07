@@ -102,23 +102,20 @@ public class SearchSort extends SearchSortAbstract{
         } else {
             menu.add(new JCheckBoxMenuItem("Wait for coming"));
         }
-        menu.addMenuKeyListener(new MenuKeyListener(){
 
-            @Override
-            public void menuKeyPressed(MenuKeyEvent e) {
+        for (int i = 0 ; i < menu.getComponentCount(); i++) {
+      	   ((AbstractButton) menu.getComponent(i)).addActionListener(new ActionListener() {
+              public void actionPerformed(ActionEvent e) {
+                System.out.println(e.toString() + "Clicked");
                 selected.add(e.toString());
+                try {
+              Thread.sleep(1000);
+            } catch (InterruptedException ie) {
+              ie.printStackTrace();
             }
-
-            @Override
-            public void menuKeyReleased(MenuKeyEvent e) {
-                selected.remove(e.toString());
-            }
-
-            @Override
-            public void menuKeyTyped(MenuKeyEvent e) {
-                selected.add(e.toString());
-            }});
-
+              }
+            });
+          }
 
 
         choiceButton.setAction(new AbstractAction(choice) {
