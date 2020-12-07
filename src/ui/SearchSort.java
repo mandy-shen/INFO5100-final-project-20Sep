@@ -37,52 +37,54 @@ public class SearchSort extends SearchSortAbstract{
 
     private JPanel getFilterPanel() {
         //code for UI for filterPanel  ie filters for searching
-        JButton category, make , model, type, bodyStyle, price, more;
-
-        filterPanel=new JPanel();
+        selected = new HashSet<String>();
+        filterPanel = new JPanel();
         filterPanel.setBackground(Color.red);
         filterPanel.add(new JLabel("FILTER"));
-        category = addFilterChoice("CATEGORY", filterPanel);
-        make = addFilterChoice("MAKE", filterPanel);
-        model = addFilterChoice("MODEL", filterPanel);
-        type = addFilterChoice("TYPE", filterPanel);
-        bodyStyle = addFilterChoice("BODY STYLE", filterPanel);
-        price = addFilterChoice("PRICE", filterPanel);
-        more = addFilterChoice("MORE", filterPanel);
-        selected = new HashSet<String>();
-
-
+        addFilterChoice("CATEGORY", filterPanel);
+        addFilterChoice("MAKE", filterPanel);
+        addFilterChoice("MODEL", filterPanel);
+        addFilterChoice("TYPE", filterPanel);
+        addFilterChoice("BODY STYLE", filterPanel);
+        addFilterChoice("PRICE", filterPanel);
+        addFilterChoice("MORE", filterPanel);
+        ((AbstractButton) filterPanel.add(new JButton("Clear All"))).addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	selected.clear();
+            	//System.out.println(selected.size());
+            }
+        });
         return filterPanel;
     }
 
-    private JButton addFilterChoice(String choice, JPanel panel) {
-        JButton choiceButton = new JButton(choice);
-        filterPanel.add(choiceButton);
-        JPopupMenu menu = new JPopupMenu();
+    private void addFilterChoice(String choice, JPanel panel) {
+    	JButton choiceButton = new JButton(choice);
+    	JPopupMenu menu = new JPopupMenu();
         if (choice.equals("CATEGORY")) {
-            menu.add(new JCheckBoxMenuItem("New"));
+        	menu.add(new JCheckBoxMenuItem("New"));
             menu.add(new JCheckBoxMenuItem("Certified Pre-Owned"));
             menu.add(new JCheckBoxMenuItem("Pre-Owned"));
         } else if (choice.equals("MAKE")) {
-            menu.add(new JCheckBoxMenuItem("Chevrolet"));
+        	menu.add(new JCheckBoxMenuItem("Chevrolet"));
             menu.add(new JCheckBoxMenuItem("BOW"));
             menu.add(new JCheckBoxMenuItem("Jeep"));
             menu.add(new JCheckBoxMenuItem("Mini"));
             menu.add(new JCheckBoxMenuItem("Nissan"));
             menu.add(new JCheckBoxMenuItem("Toyota"));
         } else if (choice.equals("MODEL")) {
-            menu.add(new JCheckBoxMenuItem("Acadia"));
+        	menu.add(new JCheckBoxMenuItem("Acadia"));
             menu.add(new JCheckBoxMenuItem("Blazer"));
             menu.add(new JCheckBoxMenuItem("Bolt EV"));
         } else if (choice.equals("TYPE")) {
-            menu.add(new JCheckBoxMenuItem("Car"));
+        	menu.add(new JCheckBoxMenuItem("Car"));
             menu.add(new JCheckBoxMenuItem("Cargo Van"));
             menu.add(new JCheckBoxMenuItem("SUV"));
             menu.add(new JCheckBoxMenuItem("Truck"));
             menu.add(new JCheckBoxMenuItem("Van"));
             menu.add(new JCheckBoxMenuItem("Wagon"));
         } else if (choice.equals("BODY STYLE")) {
-            menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Long Bed"));
+        	menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Long Bed"));
             menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Short Bed"));
             menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Standard Bed"));
         } else if (choice.equals("Year")) {
@@ -100,22 +102,38 @@ public class SearchSort extends SearchSortAbstract{
             menu.add(new JCheckBoxMenuItem("2020"));
             menu.add(new JCheckBoxMenuItem("2021"));
         } else {
-            menu.add(new JCheckBoxMenuItem("Wait for coming"));
+        	menu.add(new JCheckBoxMenuItem("Wait for coming"));
+        }
+        // method 4
+        for (int i = 0 ; i < menu.getComponentCount(); i++) {
+        	((AbstractButton) menu.getComponent(i)).addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  selected.add(e.toString().split(",")[1].substring(4));
+                  //System.out.println(e.toString().split(",")[1].substring(4) + "Clicked");
+                  try {
+                Thread.sleep(1000);
+              } catch (InterruptedException ie) {
+                ie.printStackTrace();
+              }
+                }
+              });
         }
 
-        for (int i = 0 ; i < menu.getComponentCount(); i++) {
-      	   ((AbstractButton) menu.getComponent(i)).addActionListener(new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
-                System.out.println(e.toString() + "Clicked");
-                selected.add(e.toString());
-                try {
-              Thread.sleep(1000);
-            } catch (InterruptedException ie) {
-              ie.printStackTrace();
+
+        choiceButton.setAction(new AbstractAction(choice) {
+            /**
+			 *
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+            public void actionPerformed(ActionEvent e) {
+                menu.show(choiceButton, 0, choiceButton.getHeight());
             }
-              }
-            });
-          }
+        });
+
+        panel.add(choiceButton);
+    }
 
 
         choiceButton.setAction(new AbstractAction(choice) {
