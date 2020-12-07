@@ -16,6 +16,7 @@ public class SearchSort extends SearchSortAbstract{
     private JPanel vehicleDisplayPanel;
     private JPanel sortPanel;
     private HashSet<String> selected;
+    private final int[] selectedSort = {0};
 
 
     @Override
@@ -49,39 +50,39 @@ public class SearchSort extends SearchSortAbstract{
         price = addFilterChoice("PRICE", filterPanel);
         more = addFilterChoice("MORE", filterPanel);
         selected = new HashSet<String>();
-        
-        
+
+
         return filterPanel;
     }
-    
+
     private JButton addFilterChoice(String choice, JPanel panel) {
-    	JButton choiceButton = new JButton(choice);
-    	filterPanel.add(choiceButton);
-    	JPopupMenu menu = new JPopupMenu();
+        JButton choiceButton = new JButton(choice);
+        filterPanel.add(choiceButton);
+        JPopupMenu menu = new JPopupMenu();
         if (choice.equals("CATEGORY")) {
-        	menu.add(new JCheckBoxMenuItem("New"));
+            menu.add(new JCheckBoxMenuItem("New"));
             menu.add(new JCheckBoxMenuItem("Certified Pre-Owned"));
             menu.add(new JCheckBoxMenuItem("Pre-Owned"));
         } else if (choice.equals("MAKE")) {
-        	menu.add(new JCheckBoxMenuItem("Chevrolet"));
+            menu.add(new JCheckBoxMenuItem("Chevrolet"));
             menu.add(new JCheckBoxMenuItem("BOW"));
             menu.add(new JCheckBoxMenuItem("Jeep"));
             menu.add(new JCheckBoxMenuItem("Mini"));
             menu.add(new JCheckBoxMenuItem("Nissan"));
             menu.add(new JCheckBoxMenuItem("Toyota"));
         } else if (choice.equals("MODEL")) {
-        	menu.add(new JCheckBoxMenuItem("Acadia"));
+            menu.add(new JCheckBoxMenuItem("Acadia"));
             menu.add(new JCheckBoxMenuItem("Blazer"));
             menu.add(new JCheckBoxMenuItem("Bolt EV"));
         } else if (choice.equals("TYPE")) {
-        	menu.add(new JCheckBoxMenuItem("Car"));
+            menu.add(new JCheckBoxMenuItem("Car"));
             menu.add(new JCheckBoxMenuItem("Cargo Van"));
             menu.add(new JCheckBoxMenuItem("SUV"));
             menu.add(new JCheckBoxMenuItem("Truck"));
             menu.add(new JCheckBoxMenuItem("Van"));
             menu.add(new JCheckBoxMenuItem("Wagon"));
         } else if (choice.equals("BODY STYLE")) {
-        	menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Long Bed"));
+            menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Long Bed"));
             menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Short Bed"));
             menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Standard Bed"));
         } else if (choice.equals("Year")) {
@@ -99,51 +100,106 @@ public class SearchSort extends SearchSortAbstract{
             menu.add(new JCheckBoxMenuItem("2020"));
             menu.add(new JCheckBoxMenuItem("2021"));
         } else {
-        	menu.add(new JCheckBoxMenuItem("Wait for coming"));
+            menu.add(new JCheckBoxMenuItem("Wait for coming"));
         }
         menu.addMenuKeyListener(new MenuKeyListener(){
 
-			@Override
-			public void menuKeyPressed(MenuKeyEvent e) {
-				selected.add(e.toString());
-			}
+            @Override
+            public void menuKeyPressed(MenuKeyEvent e) {
+                selected.add(e.toString());
+            }
 
-			@Override
-			public void menuKeyReleased(MenuKeyEvent e) {
-				selected.remove(e.toString());
-				
-			}
+            @Override
+            public void menuKeyReleased(MenuKeyEvent e) {
+                selected.remove(e.toString());
+            }
 
-			@Override
-			public void menuKeyTyped(MenuKeyEvent e) {
-				selected.add(e.toString());
-			}});
-        
-        
-        
+            @Override
+            public void menuKeyTyped(MenuKeyEvent e) {
+                selected.add(e.toString());
+            }});
+
+
+
         choiceButton.setAction(new AbstractAction(choice) {
             /**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
+             *
+             */
+            private static final long serialVersionUID = 1L;
 
-			@Override
+            @Override
             public void actionPerformed(ActionEvent e) {
                 menu.show(choiceButton, 0, choiceButton.getHeight());
             }
         });
-        
+
         panel.add(choiceButton);
         return choiceButton;
     }
 
+    // sort the result as user selected and provide the result to display panel to display
     private JPanel getSortPanel() {
         //UI for sorting Panel for sorting the result on the basis on certain criterias
-        sortPanel=new JPanel();
-        sortPanel.setSize(600,200);
-        sortPanel.add(new Label("sorting ui components should be here"));
+
+        sortPanel = new JPanel();
+        sortPanel.setSize(600, 200);
+        sortPanel.add(new Label("How would you like to sort the results?"));
+        JPanel temp = new JPanel();
+        JTextArea text = new JTextArea("");
+        temp.add(text);
+        String[] sortOptions = {"", "Price: High to low", "Price: Low to High", "Year: High to Low",
+                "Year: Low to High"};
+        JComboBox sortList = new JComboBox(sortOptions);
+        sortList.setSelectedIndex(0);
+        ActionListener actionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int s = (int) sortList.getSelectedIndex();
+                switch(s) {
+                    case 1:
+                        text.setText("Selected: Sort price from high to low");
+                        selectedSort[0] = 1;
+                        break;
+                    case 2:
+                        text.setText("Selected: Sort price form low to high");
+                        selectedSort[0] = 2;
+                        break;
+                    case 3:
+                        text.setText("Selected: Sort year from high to low");
+                        selectedSort[0] = 3;
+                        break;
+                    case 4:
+                        text.setText("Selected: Sort year from low to high");
+                        selectedSort[0] = 4;
+                        break;
+                }
+                text.setEditable(false);
+            }
+        };
+        sortList.addActionListener(actionListener);
+        sortPanel.add(sortList);
+        sortPanel.add(temp);
+        JButton confirm = new JButton("Confirm");
+        confirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // call the sort method to implement sorting based on user's selection
+                sort(selectedSort[0]);
+            }
+        });
+        sortPanel.add(confirm);
         sortPanel.setBackground(Color.white);
+        /* Need to get data from filter panel and sort the data using the selected sort method.
+         *  */
         return sortPanel;
+    }
+
+    // Parameter: User's selected sorting preference
+    // Select and sort the vehicle objects and store it in a LinkedHashSet
+    private void sort(int userSelectedSort) {
+        System.out.println(userSelectedSort);
+        // TODO
+
     }
 
     private JPanel getVehicleDisplayPanel() {
