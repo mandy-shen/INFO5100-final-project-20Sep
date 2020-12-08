@@ -1,5 +1,7 @@
-package main;
+package ui;
 
+
+import ui.AutomobileDealerInventoryUI02;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -18,7 +20,7 @@ import java.util.HashSet;
 
 public class ShowAndSearchUI extends JFrame {
 
-    AutomobileDealerInventoryUI03 inventory = new AutomobileDealerInventoryUI03();
+    AutomobileDealerInventoryUI02 inventory = new AutomobileDealerInventoryUI02();
     private JPanel sortPanel;
     private HashSet<String> selected;
     private JScrollPane jScrollPane2;
@@ -28,9 +30,9 @@ public class ShowAndSearchUI extends JFrame {
     private JPanel mainDisplay;
     private final int[] selectedSort = {0};
     String[] dealerInventoryData;
-
-    String dealerName= "gmps-carstens-alturas";
-    private static final String PATH ="D://finalTast-carPorject//jha//data//";
+    String dealerName= "gmps-aj-dohmann";
+    private static final String PATH ="././data/";
+    private JButton viewMore_button;
 
 
 
@@ -47,16 +49,11 @@ public class ShowAndSearchUI extends JFrame {
         jScrollPane2 = new JScrollPane();
         vehicleDisplay = new JTable();
         sortPanel = new JPanel();
-
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
         mainDisplay.setBackground(new Color(153, 153, 153));
-
         pageHeading.setFont(new Font("Tahoma", 0, 48)); // NOI18N
         pageHeading.setText("INVENTORY");
-
         filterPanel.setBackground(new Color(204, 204, 204));
-
         GroupLayout filterPanelLayout = new GroupLayout(getFilterPanel());
         filterPanel.setLayout(filterPanelLayout);
         filterPanelLayout.setHorizontalGroup(
@@ -135,7 +132,6 @@ public class ShowAndSearchUI extends JFrame {
         mainDisplay.add(getFilterPanel());
         mainDisplay.add(getSortPanel());
         mainDisplay.add(getTable());
-
         return mainDisplay;
     }
 
@@ -264,6 +260,8 @@ public class ShowAndSearchUI extends JFrame {
         panel.add(choiceButton);
     }
 
+
+
     private JPanel getSortPanel() {
         //UI for sorting Panel for sorting the result on the basis on certain criterias
 
@@ -331,9 +329,9 @@ public class ShowAndSearchUI extends JFrame {
 
     private JTable getTable() {
         vehicleDisplay = new JTable();
-        vehicleDisplay.setRowHeight(600);
+        vehicleDisplay.setRowHeight(200);
         DefaultTableModel model=(DefaultTableModel) vehicleDisplay.getModel();
-        Object[] columns=new Object[]{"Model","Type","Year","Price","Image"};
+        Object[] columns=new Object[]{"Model","Type","Year","Price","View More","Image"};
         model.setColumnIdentifiers(columns);
         readDealerInventory(dealerName); //Reading Inventory data of dealer
         return vehicleDisplay;
@@ -354,10 +352,19 @@ public class ShowAndSearchUI extends JFrame {
         vehicleDisplay.getColumn("Image").setCellRenderer(new TableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                TableColumn tb = vehicleDisplay.getColumn("Image");
-                tb.setMaxWidth(100);
-                tb.setMinWidth(100);
-                vehicleDisplay.setRowHeight(30);
+                TableColumn tbImage = vehicleDisplay.getColumn("Image");
+                tbImage.setMaxWidth(100);
+                tbImage.setMinWidth(100);
+                return (Component) value;
+            }
+        });
+
+        vehicleDisplay.getColumn("View More").setCellRenderer(new TableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                TableColumn tbButton=vehicleDisplay.getColumn("View More");
+                tbButton.setMaxWidth(100);
+                tbButton.setMaxWidth(100);
                 return (Component) value;
             }
         });
@@ -368,11 +375,11 @@ public class ShowAndSearchUI extends JFrame {
             imageIcon= new ImageIcon(image);
         } catch (MalformedURLException e) {
             //e.printStackTrace();
-            vehicleImagePath =PATH +"icons8_image_48px.png";
+            vehicleImagePath =PATH +"404NotFound.png";
             imageIcon= new ImageIcon(vehicleImagePath);
 
         } catch (IOException e) {
-            vehicleImagePath=PATH +"icons8_image_48px.png";
+            vehicleImagePath=PATH +"404NotFound.png";
             imageIcon= new ImageIcon(vehicleImagePath);
 
         }
@@ -380,9 +387,11 @@ public class ShowAndSearchUI extends JFrame {
 
         Image img = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         JLabel imageLabel=new JLabel();
+        viewMore_button=new JButton("View More");
         imageLabel.setIcon(new ImageIcon(img));
         DefaultTableModel newModel=(DefaultTableModel) vehicleDisplay.getModel();
-        newModel.addRow(new Object[]{model,type,year,price,imageLabel});
+        newModel.addRow(new Object[]{model,type,year,price,viewMore_button,imageLabel});
+
     }
 
 
@@ -390,10 +399,8 @@ public class ShowAndSearchUI extends JFrame {
         {
             String line = "";
             String splitBy = "~";
-
             try
             {
-
                 BufferedReader br = new BufferedReader(new FileReader(PATH + dealerName));
                 while ((line = br.readLine()) != null){
 
@@ -411,9 +418,6 @@ public class ShowAndSearchUI extends JFrame {
         }
 
     }
-
-
-
 
 
     public static void main(String args[]) {

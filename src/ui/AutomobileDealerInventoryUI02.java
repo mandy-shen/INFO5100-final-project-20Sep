@@ -1,7 +1,4 @@
-package main;
-
-import dao.Vehicle;
-import dto.DataPersistence;
+package ui;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -14,9 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 
 public class AutomobileDealerInventoryUI02 extends JFrame {
 
@@ -46,9 +41,7 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
         mainDisplay.setBackground(new Color(153, 153, 153));
         pageHeading.setFont(new Font("Tahoma", 0, 36)); // NOI18N
         pageHeading.setText("INVENTORY");
-
         jScrollPane2.setViewportView(getTable());
-
         GroupLayout mainDisplayLayout = new GroupLayout(mainDisplay);
         mainDisplay.setLayout(mainDisplayLayout);
         mainDisplayLayout.setHorizontalGroup(
@@ -93,6 +86,7 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
         return vehicleDisplay;
     }
 
+
     private void getVehicals(String[] dealerInventoryData) throws MalformedURLException {
         int maxRowCountPerPage=50;
         String model=dealerInventoryData[5];
@@ -104,7 +98,6 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
         URL url = null;
         Image image = null;
         ImageIcon imageIcon;
-
         vehicleDisplay.getColumn("Image").setCellRenderer(new TableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -115,7 +108,6 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
                 return (Component) value;
             }
         });
-
         try {
             url =new URL(vehicleImagePath);
             image = ImageIO.read(url);
@@ -131,23 +123,20 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
 
         }
         //System.out.println(vehicleImagePath);
-
         Image img = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         JLabel imageLabel=new JLabel();
         imageLabel.setIcon(new ImageIcon(img));
         DefaultTableModel newModel=(DefaultTableModel) vehicleDisplay.getModel();
         newModel.addRow(new Object[]{model,type,year,price,imageLabel});
-      }
+    }
 
 
     private void readDealerInventory(String dealerName) {
         {
             String line = "";
             String splitBy = "~";
-
             try
             {
-
                 BufferedReader br = new BufferedReader(new FileReader("././Data/"+dealerName));
                 while ((line = br.readLine()) != null){
 
@@ -166,9 +155,7 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
 
     }
 
-
     public static void main(String args[]) {
-
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -186,19 +173,13 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
             java.util.logging.Logger.getLogger(AutomobileDealerInventoryUI02.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
                 new AutomobileDealerInventoryUI02().setVisible(true);
-                //new AutomobileDealerInventoryUI02().readDealerInventory("gmps-aj-dohmann");
 
             }
         });
     }
-
-
-
 }
-
