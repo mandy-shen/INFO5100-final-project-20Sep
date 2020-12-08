@@ -46,8 +46,7 @@ public class SearchSort extends SearchSortAbstract{
         addFilterChoice("MODEL", filterPanel);
         addFilterChoice("TYPE", filterPanel);
         addFilterChoice("BODY STYLE", filterPanel);
-        addFilterChoice("ABOVE PRICE", filterPanel);
-        addFilterChoice("BELOW PRICE", filterPanel);
+        addFilterChoice("PRICE", filterPanel);
         addFilterChoice("MORE", filterPanel);
         ((AbstractButton) filterPanel.add(new JButton("Clear All"))).addActionListener(new ActionListener() {
             @Override
@@ -102,7 +101,7 @@ public class SearchSort extends SearchSortAbstract{
             menu.add(new JCheckBoxMenuItem("2019"));
             menu.add(new JCheckBoxMenuItem("2020"));
             menu.add(new JCheckBoxMenuItem("2021"));
-        } else if (choice.equals("ABOVE PRICE")) {
+        } else if (choice.equals("Above Price")) {
         	menu.add(new JCheckBoxMenuItem("1000"));
         	menu.add(new JCheckBoxMenuItem("5000"));
         	menu.add(new JCheckBoxMenuItem("10000"));
@@ -110,7 +109,7 @@ public class SearchSort extends SearchSortAbstract{
         	menu.add(new JCheckBoxMenuItem("20000"));
         	menu.add(new JCheckBoxMenuItem("25000"));
         	menu.add(new JCheckBoxMenuItem("30000"));
-        } else if (choice.equals("BELOW PRICE")) {
+        } else if (choice.equals("Below Price")) {
         	menu.add(new JCheckBoxMenuItem("1000"));
         	menu.add(new JCheckBoxMenuItem("5000"));
         	menu.add(new JCheckBoxMenuItem("10000"));
@@ -141,7 +140,7 @@ public class SearchSort extends SearchSortAbstract{
                   }
                 }
               });}
-
+        
         // combine each button with CheckBoxMenu
         choiceButton.setAction(new AbstractAction(choice) {
             /**
