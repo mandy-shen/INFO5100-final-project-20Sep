@@ -3,11 +3,19 @@ package main;
 import dao.Vehicle;
 import dto.DataPersistence;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AutomobileDealerInventoryUI02 extends JFrame {
@@ -18,11 +26,12 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
     private JLabel pageHeading;
     private JTable vehicleDisplay;
     String dealerName= "gmps-aj-dohmann";
-
+    String[] dealerInventoryData;
     /**
      * Creates new form Inventory
      */
     public AutomobileDealerInventoryUI02() {
+
         initComponents();
     }
 
@@ -38,7 +47,7 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
         pageHeading.setFont(new Font("Tahoma", 0, 36)); // NOI18N
         pageHeading.setText("INVENTORY");
 
-        jScrollPane2.setViewportView(getTable(dealerName));
+        jScrollPane2.setViewportView(getTable());
 
         GroupLayout mainDisplayLayout = new GroupLayout(mainDisplay);
         mainDisplay.setLayout(mainDisplayLayout);
@@ -48,12 +57,12 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainDisplayLayout.createSequentialGroup()
                                 .addContainerGap(352, Short.MAX_VALUE)
                                 .addComponent(pageHeading)
-                                .addGap(342, 342, 342))
+                                .addGap(500, 500, 500))
         );
         mainDisplayLayout.setVerticalGroup(
                 mainDisplayLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(mainDisplayLayout.createSequentialGroup()
-                                .addGap(33, 33, 33)
+                                .addGap(20, 20, 20)
                                 .addComponent(pageHeading)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                                 .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 540, GroupLayout.PREFERRED_SIZE))
@@ -74,39 +83,87 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
     }
 
 
-    private JTable getTable(String dealerName) {
-        // if (vehicleDisplay == null) {
+    private JTable getTable() {
         vehicleDisplay = new JTable();
-        vehicleDisplay.setRowHeight(125);
-        String[] columns = {"model", "price", "miles", "images"};
-        DefaultTableModel model = new DefaultTableModel(columns, 0);
-        vehicleDisplay.setModel(model);
-        List<String> vehicles = getVehicle(dealerName);
-
-        for (String vehicle : vehicles) {
-            String[] args = vehicle.split(",");
-            model.addRow(args);
-        }
+        vehicleDisplay.setRowHeight(600);
+        DefaultTableModel model=(DefaultTableModel) vehicleDisplay.getModel();
+        Object[] columns=new Object[]{"Model","Type","Year","Price","Image"};
+        model.setColumnIdentifiers(columns);
+        readDealerInventory(dealerName); //Reading Inventory data of dealer
         return vehicleDisplay;
     }
 
+    private void getVehicals(String[] dealerInventoryData) throws MalformedURLException {
+        int maxRowCountPerPage=50;
+        String model=dealerInventoryData[5];
+        String make=dealerInventoryData[4];
+        String type=dealerInventoryData[7];
+        String year=dealerInventoryData[3];
+        String price="$"+dealerInventoryData[8];
+        String vehicleImagePath=dealerInventoryData[dealerInventoryData.length-1];
+        URL url = null;
+        Image image = null;
+        ImageIcon imageIcon;
 
-
-    //turn List<Vehicle> to the List<String>
-    private List<String> getVehicle(String dealerName) {
-        DataPersistence dp = new DataPersistence();
-        try {
-            List<String> stringVe = new ArrayList<>();
-            List<Vehicle> allVehicles = dp.getAllVehicles(dealerName);
-            for (Vehicle vehicle:allVehicles) {
-                stringVe.add(vehicle.toString());
-              //  System.out.println(vehicle.toString());
+        vehicleDisplay.getColumn("Image").setCellRenderer(new TableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                TableColumn tb = vehicleDisplay.getColumn("Image");
+                tb.setMaxWidth(100);
+                tb.setMinWidth(100);
+                vehicleDisplay.setRowHeight(60);
+                return (Component) value;
             }
-            return stringVe;
+        });
+
+        try {
+            url =new URL(vehicleImagePath);
+            image = ImageIO.read(url);
+            imageIcon= new ImageIcon(image);
+        } catch (MalformedURLException e) {
+            //e.printStackTrace();
+            vehicleImagePath ="././data/404NotFound.png";
+            imageIcon= new ImageIcon(vehicleImagePath);
+
         } catch (IOException e) {
-            e.printStackTrace();
+            vehicleImagePath="././data/404NotFound.png";
+            imageIcon= new ImageIcon(vehicleImagePath);
+
         }
-        return null;
+        //System.out.println(vehicleImagePath);
+
+        Image img = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+        JLabel imageLabel=new JLabel();
+        imageLabel.setIcon(new ImageIcon(img));
+        DefaultTableModel newModel=(DefaultTableModel) vehicleDisplay.getModel();
+        newModel.addRow(new Object[]{model,type,year,price,imageLabel});
+      }
+
+
+    private void readDealerInventory(String dealerName) {
+        {
+            String line = "";
+            String splitBy = "~";
+
+            try
+            {
+
+                BufferedReader br = new BufferedReader(new FileReader("././Data/"+dealerName));
+                while ((line = br.readLine()) != null){
+
+                    dealerInventoryData=line.split(splitBy);
+                    getVehicals(dealerInventoryData);
+//                                          System.out.println(Arrays.toString(dealerInventoryData));
+//                        System.out.println("Dealers [Dealer ID =" + dealerInventoryData[0] + ", WebId=" + dealerInventoryData[1] + ", Category=" + dealerInventoryData[2] +
+//                                            ", year=" + dealerInventoryData[3] + ", Make=" + dealerInventoryData[4] + ", Model= " + dealerInventoryData[5] + ", Trim= " + dealerInventoryData[6]
+//                                            + ", Type= " + dealerInventoryData[7] +", Price= " + dealerInventoryData[8] +"]");
+                }
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
 
@@ -135,7 +192,7 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
             @Override
             public void run() {
                 new AutomobileDealerInventoryUI02().setVisible(true);
-                new AutomobileDealerInventoryUI02().getVehicle("gmps-aj-dohmann");
+                //new AutomobileDealerInventoryUI02().readDealerInventory("gmps-aj-dohmann");
 
             }
         });
