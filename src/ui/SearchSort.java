@@ -234,6 +234,7 @@ public class SearchSort extends SearchSortAbstract{
         }
 
         addToResult(count, data, result);
+        count++;
         for (int i = count; i < FILTER_CATEGROY_COUNT; i++) {
             if (selectedList.get(i).length > 0) {
                 deleteFromResult(i, data, result);
@@ -244,7 +245,6 @@ public class SearchSort extends SearchSortAbstract{
 
 
     private void addToResult(int count, ArrayList<String[]> data, ArrayList<String[]> result) {
-        String[] dataIndex = data.get(ORDER[count]);
         for (int i = 0; i < selectedList.get(count).length; i++) {
             for (int j = 0; j < data.size(); j++) {
                 String[] currentData = data.get(j);
@@ -270,7 +270,7 @@ public class SearchSort extends SearchSortAbstract{
     // Parameter: User's selected sorting preference
     // Select and sort the vehicle objects and store it in a LinkedHashSet
     private void sort(int userSelectedSort, ArrayList filteredList) {
-        
+
 
     }
 
