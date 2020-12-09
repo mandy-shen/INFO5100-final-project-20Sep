@@ -1,5 +1,6 @@
 package ui;
 import dao.Vehicle;
+import dto.DataPersistence;
 
 import javax.swing.*;
 import javax.swing.event.MenuKeyEvent;
@@ -8,15 +9,18 @@ import javax.swing.event.MenuKeyListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class SearchSort extends SearchSortAbstract{
     private JPanel mainDisplayPanel;
     private JPanel filterPanel;
     private JPanel vehicleDisplayPanel;
     private JPanel sortPanel;
-    private HashSet<String> selected;
-    private final int[] selectedSort = {0};
+    private HashSet<String> selected;// selected filter
+    private final int[] selectedSort = {0}; // selected sort
+    private final String dealerName = "gmps-bresee";
 
 
     @Override
@@ -59,32 +63,32 @@ public class SearchSort extends SearchSortAbstract{
     }
 
     private void addFilterChoice(String choice, JPanel panel) {
-    	JButton choiceButton = new JButton(choice);
-    	JPopupMenu menu = new JPopupMenu();
+        JButton choiceButton = new JButton(choice);
+        JPopupMenu menu = new JPopupMenu();
         if (choice.equals("CATEGORY")) {
-        	menu.add(new JCheckBoxMenuItem("New"));
+            menu.add(new JCheckBoxMenuItem("New"));
             menu.add(new JCheckBoxMenuItem("Certified Pre-Owned"));
             menu.add(new JCheckBoxMenuItem("Pre-Owned"));
         } else if (choice.equals("MAKE")) {
-        	menu.add(new JCheckBoxMenuItem("Chevrolet"));
+            menu.add(new JCheckBoxMenuItem("Chevrolet"));
             menu.add(new JCheckBoxMenuItem("BOW"));
             menu.add(new JCheckBoxMenuItem("Jeep"));
             menu.add(new JCheckBoxMenuItem("Mini"));
             menu.add(new JCheckBoxMenuItem("Nissan"));
             menu.add(new JCheckBoxMenuItem("Toyota"));
         } else if (choice.equals("MODEL")) {
-        	menu.add(new JCheckBoxMenuItem("Acadia"));
+            menu.add(new JCheckBoxMenuItem("Acadia"));
             menu.add(new JCheckBoxMenuItem("Blazer"));
             menu.add(new JCheckBoxMenuItem("Bolt EV"));
         } else if (choice.equals("TYPE")) {
-        	menu.add(new JCheckBoxMenuItem("Car"));
+            menu.add(new JCheckBoxMenuItem("Car"));
             menu.add(new JCheckBoxMenuItem("Cargo Van"));
             menu.add(new JCheckBoxMenuItem("SUV"));
             menu.add(new JCheckBoxMenuItem("Truck"));
             menu.add(new JCheckBoxMenuItem("Van"));
             menu.add(new JCheckBoxMenuItem("Wagon"));
         } else if (choice.equals("BODY STYLE")) {
-        	menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Long Bed"));
+            menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Long Bed"));
             menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Short Bed"));
             menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Standard Bed"));
         } else if (choice.equals("Year")) {
@@ -101,41 +105,47 @@ public class SearchSort extends SearchSortAbstract{
             menu.add(new JCheckBoxMenuItem("2019"));
             menu.add(new JCheckBoxMenuItem("2020"));
             menu.add(new JCheckBoxMenuItem("2021"));
+        } else if (choice.equals("ABOVE PRICE")) {
+            menu.add(new JCheckBoxMenuItem("1000"));
+            menu.add(new JCheckBoxMenuItem("5000"));
+            menu.add(new JCheckBoxMenuItem("10000"));
+            menu.add(new JCheckBoxMenuItem("15000"));
+            menu.add(new JCheckBoxMenuItem("20000"));
+            menu.add(new JCheckBoxMenuItem("25000"));
+            menu.add(new JCheckBoxMenuItem("30000"));
+        } else if (choice.equals("BELOW PRICE")) {
+            menu.add(new JCheckBoxMenuItem("1000"));
+            menu.add(new JCheckBoxMenuItem("5000"));
+            menu.add(new JCheckBoxMenuItem("10000"));
+            menu.add(new JCheckBoxMenuItem("15000"));
+            menu.add(new JCheckBoxMenuItem("20000"));
+            menu.add(new JCheckBoxMenuItem("25000"));
+            menu.add(new JCheckBoxMenuItem("30000"));
+            menu.add(new JCheckBoxMenuItem("35000"));
+            menu.add(new JCheckBoxMenuItem("40000"));
+            menu.add(new JCheckBoxMenuItem("45000"));
         } else {
-        	menu.add(new JCheckBoxMenuItem("Wait for coming"));
+            menu.add(new JCheckBoxMenuItem("Wait for coming"));
         }
-        // method 4
-        for (int i = 0 ; i < menu.getComponentCount(); i++) {
-        	((AbstractButton) menu.getComponent(i)).addActionListener(new ActionListener() {
+        // add action listener to each ChekcBoxMenuItem
+        for (Component item: menu.getComponents()) {
+            ((AbstractButton) item).addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                  selected.add(e.toString().split(",")[1].substring(4));
-                  //System.out.println(e.toString().split(",")[1].substring(4) + "Clicked");
-                  try {
-                Thread.sleep(1000);
-              } catch (InterruptedException ie) {
-                ie.printStackTrace();
-              }
+                    if (!((JCheckBoxMenuItem)item).isSelected()) {
+                        selected.remove(e.toString().split(",")[1].substring(4));
+                    } else {
+                        selected.add(e.toString().split(",")[1].substring(4));
+                    }
+                    // System.out.println(selected);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ie) {
+                        ie.printStackTrace();
+                    }
                 }
-              });
-        }
+            });}
 
-
-        choiceButton.setAction(new AbstractAction(choice) {
-            /**
-			 *
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-            public void actionPerformed(ActionEvent e) {
-                menu.show(choiceButton, 0, choiceButton.getHeight());
-            }
-        });
-
-        panel.add(choiceButton);
-    }
-
-
+        // combine each button with CheckBoxMenu
         choiceButton.setAction(new AbstractAction(choice) {
             /**
              *
@@ -149,7 +159,6 @@ public class SearchSort extends SearchSortAbstract{
         });
 
         panel.add(choiceButton);
-        return choiceButton;
     }
 
     // sort the result as user selected and provide the result to display panel to display
@@ -195,6 +204,7 @@ public class SearchSort extends SearchSortAbstract{
         sortPanel.add(sortList);
         sortPanel.add(temp);
         JButton confirm = new JButton("Confirm");
+        JButton cancel = new JButton("Clear Sorting");
         confirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -212,10 +222,41 @@ public class SearchSort extends SearchSortAbstract{
     // Parameter: User's selected sorting preference
     // Select and sort the vehicle objects and store it in a LinkedHashSet
     private void sort(int userSelectedSort) {
-        System.out.println(userSelectedSort);
-        // TODO
+        AutomobileUI ui = new AutomobileUI();
+        DataPersistence dp = new DataPersistence();
+        List<Vehicle> list;
+        list = dp.getAllVehicles();
+        if (userSelectedSort == 1) {
+            priceHighToLow(ui.dealerInventoryData);
+        } else if (userSelectedSort == 2) {
+            priceLowToHigh(ui.dealerInventoryData);
+        } else if (userSelectedSort == 3) {
+            yearHighToLow(ui.dealerInventoryData);
+        } else if (userSelectedSort == 4) {
+            yearLowToHigh(ui.dealerInventoryData);
+        }
 
     }
+
+
+
+    private void yearHighToLow(Object[] dealerInventoryData) {
+
+    }
+    private void yearLowToHigh(Object[] dealerInventoryData) {
+
+    }
+
+    private void priceHighToLow(Object[] dealerInventoryData) {
+
+    }
+
+    private void priceLowToHigh(Object[] dealerInventoryData) {
+
+    }
+
+
+
 
     private JPanel getVehicleDisplayPanel() {
 

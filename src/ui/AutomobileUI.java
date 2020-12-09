@@ -18,6 +18,7 @@ public class AutomobileUI {
     private JTable vehiclesTable;
     private String dealerName="gmps-aj-dohmann" ;// dealer name will come from UC1
     Object[] dealerInventoryData;
+    ArrayList fullInventoryData;
 
 
     AutomobileUI(){
@@ -67,7 +68,8 @@ public class AutomobileUI {
         {
             String line = "";
             String splitBy = "~";
-            
+            int count = 0;
+
             try
             {
 
@@ -76,6 +78,7 @@ public class AutomobileUI {
                         //noOfLinesPresent++;
                         dealerInventoryData=line.split(splitBy);
                         displayVehicals(dealerInventoryData);
+                        fullInventoryData.add(dealerInventoryData);
  //                      System.out.println(Arrays.toString(dealerInventoryData));
 //                        System.out.println("Dealers [Dealer ID =" + dealerInventoryData[0] + ", WebId=" + dealerInventoryData[1] + ", Category=" + dealerInventoryData[2] +
 //                                            ", year=" + dealerInventoryData[3] + ", Make=" + dealerInventoryData[4] + ", Model= " + dealerInventoryData[5] + ", Trim= " + dealerInventoryData[6]
