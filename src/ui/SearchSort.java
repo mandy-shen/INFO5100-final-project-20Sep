@@ -8,6 +8,8 @@ import javax.swing.event.MenuKeyListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class SearchSort extends SearchSortAbstract{
@@ -17,7 +19,9 @@ public class SearchSort extends SearchSortAbstract{
     private JPanel sortPanel;
     private HashSet<String> selected;
     private final int[] selectedSort = {0};
-
+    private ArrayList<String[]> selectedList;
+    private final int FILTER_CATEGROY_COUNT = 7;
+    private final Integer[] ORDER = {2, 4, 5, 7, 6, 8, 8};
 
     @Override
     JPanel getMainDisplayPanel() {
@@ -205,7 +209,9 @@ public class SearchSort extends SearchSortAbstract{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // call the sort method to implement sorting based on user's selection
-                sort(selectedSort[0]);
+                ShowAndSearchUI ui = new ShowAndSearchUI();
+                ArrayList filteredList = filter(ui.fullInventoryData);
+                sort(selectedSort[0], filteredList);
             }
         });
         sortPanel.add(confirm);
@@ -215,11 +221,56 @@ public class SearchSort extends SearchSortAbstract{
         return sortPanel;
     }
 
+    // filter the data based on selected filter choices
+    private ArrayList filter(ArrayList data) {
+        ArrayList<String[]> result = new ArrayList<>();
+        int count = 0;
+        for (int i = 0; i < selectedList.size(); i++) {
+            if (selectedList.get(count).length > 0) {
+                break;
+            } else {
+                count++;
+            }
+        }
+
+        addToResult(count, data, result);
+        for (int i = count; i < FILTER_CATEGROY_COUNT; i++) {
+            if (selectedList.get(i).length > 0) {
+                deleteFromResult(i, data, result);
+            }
+        }
+        return result;
+    }
+
+
+    private void addToResult(int count, ArrayList<String[]> data, ArrayList<String[]> result) {
+        String[] dataIndex = data.get(ORDER[count]);
+        for (int i = 0; i < selectedList.get(count).length; i++) {
+            for (int j = 0; j < data.size(); j++) {
+                String[] currentData = data.get(j);
+                if (currentData[ORDER[count]].toLowerCase().equals(selectedList.get(count)[i].toLowerCase())) {
+                    result.add(currentData);
+                }
+            }
+        }
+    }
+
+    private void deleteFromResult(int count, ArrayList<String[]> data, ArrayList<String[]> result) {
+        for (int i = 0; i < selectedList.get(count).length; i++) {
+            for (int j = 0; j < data.size(); j++) {
+                String[] currentData = data.get(i);
+                if (!currentData[ORDER[count]].toLowerCase().equals(selectedList.get(count)[i].toLowerCase())) {
+                    data.remove(j);
+                }
+            }
+        }
+
+    }
+
     // Parameter: User's selected sorting preference
     // Select and sort the vehicle objects and store it in a LinkedHashSet
-    private void sort(int userSelectedSort) {
-        System.out.println(userSelectedSort);
-        // TODO
+    private void sort(int userSelectedSort, ArrayList filteredList) {
+        
 
     }
 

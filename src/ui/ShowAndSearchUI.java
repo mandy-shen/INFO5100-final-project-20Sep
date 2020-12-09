@@ -16,6 +16,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class ShowAndSearchUI extends JFrame {
@@ -30,6 +31,7 @@ public class ShowAndSearchUI extends JFrame {
     private JPanel mainDisplay;
     private final int[] selectedSort = {0};
     String[] dealerInventoryData;
+    ArrayList<String[]> fullInventoryData;
     String dealerName= "gmps-aj-dohmann";
     private static final String PATH ="././data/";
     private JButton viewMore_button;
@@ -399,6 +401,7 @@ public class ShowAndSearchUI extends JFrame {
         {
             String line = "";
             String splitBy = "~";
+
             try
             {
                 BufferedReader br = new BufferedReader(new FileReader(PATH + dealerName));
@@ -406,6 +409,7 @@ public class ShowAndSearchUI extends JFrame {
 
                     dealerInventoryData=line.split(splitBy);
                     getVehicals(dealerInventoryData);
+                    fullInventoryData.add(dealerInventoryData);
 //                                          System.out.println(Arrays.toString(dealerInventoryData));
 //                        System.out.println("Dealers [Dealer ID =" + dealerInventoryData[0] + ", WebId=" + dealerInventoryData[1] + ", Category=" + dealerInventoryData[2] +
 //                                            ", year=" + dealerInventoryData[3] + ", Make=" + dealerInventoryData[4] + ", Model= " + dealerInventoryData[5] + ", Trim= " + dealerInventoryData[6]
