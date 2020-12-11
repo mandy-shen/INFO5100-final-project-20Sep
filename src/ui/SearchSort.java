@@ -12,7 +12,7 @@ public class SearchSort extends SearchSortAbstract{
     private JPanel filterPanel;
     private JPanel vehicleDisplayPanel;
     private JPanel sortPanel;
-    private HashSet<String> selected; //Change it to ArrayList<String[]> is best
+    private HashMap<String, HashSet<String>> container;
     private final int[] selectedSort = {0};
     private ArrayList<String[]> selectedList;
     private final int FILTER_CATEGROY_COUNT = 7;
@@ -36,7 +36,7 @@ public class SearchSort extends SearchSortAbstract{
 
     private JPanel getFilterPanel() {
         //code for UI for filterPanel  ie filters for searching
-        selected = new HashSet<String>();
+        container = new HashMap<String, HashSet<String>>();
         filterPanel = new JPanel();
         filterPanel.setBackground(Color.red);
         filterPanel.add(new JLabel("FILTER"));
@@ -51,8 +51,8 @@ public class SearchSort extends SearchSortAbstract{
         ((AbstractButton) filterPanel.add(new JButton("Clear All"))).addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	selected.clear();
-            	//System.out.println(selected.size());
+            	container.clear();
+            	//System.out.println(container.size());
             }
         });
         return filterPanel;
@@ -127,12 +127,16 @@ public class SearchSort extends SearchSortAbstract{
         for (Component item: menu.getComponents()) {
         	((AbstractButton) item).addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                  String cur = e.toString().split(",")[1].substring(4);
                   if (!((JCheckBoxMenuItem)item).isSelected()) {
-                	  selected.remove(e.toString().split(",")[1].substring(4));
+                	  container.get(choice).remove(cur);
                   } else {
-                	  selected.add(e.toString().split(",")[1].substring(4));
+                	  if (!container.containsKey(choice)) {
+                		  container.put(choice, new HashSet<String>());
+                	  }
+                	  container.get(choice).add(cur);
                   }
-                  // System.out.println(selected);
+                  //System.out.println(container);
                   try {
                 	  Thread.sleep(1000);
                   } catch (InterruptedException ie) {
