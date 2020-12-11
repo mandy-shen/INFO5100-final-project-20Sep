@@ -34,7 +34,8 @@ public class ShowAndSearchUI extends JFrame {
     ArrayList<String[]> fullInventoryData;
     String dealerName= "gmps-aj-dohmann";
     private static final String PATH ="././data/";
-    private JButton viewMore_button;
+    private JButton viewMore_button,showIncentives;
+
 
 
 
@@ -333,7 +334,7 @@ public class ShowAndSearchUI extends JFrame {
         vehicleDisplay = new JTable();
         vehicleDisplay.setRowHeight(200);
         DefaultTableModel model=(DefaultTableModel) vehicleDisplay.getModel();
-        Object[] columns=new Object[]{"Model","Type","Year","Price","View More","Image"};
+        Object[] columns=new Object[]{"Model","Type","Year","Price","View More","Show Incentives","Image"};
         model.setColumnIdentifiers(columns);
         readDealerInventory(dealerName); //Reading Inventory data of dealer
         return vehicleDisplay;
@@ -370,6 +371,15 @@ public class ShowAndSearchUI extends JFrame {
                 return (Component) value;
             }
         });
+        vehicleDisplay.getColumn("Show Incentives").setCellRenderer(new TableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                TableColumn tbButton=vehicleDisplay.getColumn("Show Incentives");
+                tbButton.setMaxWidth(100);
+                tbButton.setMaxWidth(100);
+                return (Component) value;
+            }
+        });
 
         try {
             url =new URL(vehicleImagePath);
@@ -390,11 +400,14 @@ public class ShowAndSearchUI extends JFrame {
         Image img = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         JLabel imageLabel=new JLabel();
         viewMore_button=new JButton("View More");
+        showIncentives=new JButton("Show Incentives");
         imageLabel.setIcon(new ImageIcon(img));
         DefaultTableModel newModel=(DefaultTableModel) vehicleDisplay.getModel();
-        newModel.addRow(new Object[]{model,type,year,price,viewMore_button,imageLabel});
+        newModel.addRow(new Object[]{model,type,year,price,viewMore_button,showIncentives,imageLabel});
 
     }
+
+
 
 
     private void readDealerInventory(String dealerName) {
@@ -409,7 +422,14 @@ public class ShowAndSearchUI extends JFrame {
 
                     dealerInventoryData=line.split(splitBy);
                     getVehicals(dealerInventoryData);
-                    fullInventoryData.add(dealerInventoryData);
+                    fullInventoryData=new ArrayList<String[]>();
+                   fullInventoryData.add(dealerInventoryData);
+                    for(int i=0;i<fullInventoryData.size();i++){
+                        for(int j=0;j<fullInventoryData.get(i).length;j++){
+                            System.out.println(fullInventoryData.get(i)[j]);
+                        }
+
+                    }
 //                                          System.out.println(Arrays.toString(dealerInventoryData));
 //                        System.out.println("Dealers [Dealer ID =" + dealerInventoryData[0] + ", WebId=" + dealerInventoryData[1] + ", Category=" + dealerInventoryData[2] +
 //                                            ", year=" + dealerInventoryData[3] + ", Make=" + dealerInventoryData[4] + ", Model= " + dealerInventoryData[5] + ", Trim= " + dealerInventoryData[6]
