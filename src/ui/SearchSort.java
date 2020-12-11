@@ -1,23 +1,18 @@
 package ui;
-import dao.Vehicle;
 
 import javax.swing.*;
-import javax.swing.event.MenuKeyEvent;
-import javax.swing.event.MenuKeyListener;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 
 public class SearchSort extends SearchSortAbstract{
     private JPanel mainDisplayPanel;
     private JPanel filterPanel;
     private JPanel vehicleDisplayPanel;
     private JPanel sortPanel;
-    private HashSet<String> selected;
+    private HashSet<String> selected; //Change it to ArrayList<String[]> is best
     private final int[] selectedSort = {0};
     private ArrayList<String[]> selectedList;
     private final int FILTER_CATEGROY_COUNT = 7;
@@ -211,7 +206,9 @@ public class SearchSort extends SearchSortAbstract{
                 // call the sort method to implement sorting based on user's selection
                 ShowAndSearchUI ui = new ShowAndSearchUI();
                 ArrayList filteredList = filter(ui.fullInventoryData);
-                sort(selectedSort[0], filteredList);
+                ArrayList sortedList = sort(selectedSort[0], filteredList); // final sorted list
+                // TODO: Need to integrate with Deepika
+
             }
         });
         sortPanel.add(confirm);
@@ -269,9 +266,35 @@ public class SearchSort extends SearchSortAbstract{
 
     // Parameter: User's selected sorting preference
     // Select and sort the vehicle objects and store it in a LinkedHashSet
-    private void sort(int userSelectedSort, ArrayList filteredList) {
+    private ArrayList sort(int userSelectedSort, ArrayList filteredList) {
+        if (userSelectedSort == 1) {
+            sortByNumber(filteredList, false, 8); // sort price from high to low
+        } else if (userSelectedSort == 2) {
+            sortByNumber(filteredList, true, 8); // sort price from low to high
+        } else if (userSelectedSort == 3) {
+            sortByNumber(filteredList, false, 3); // sort year from high to low
+        } else if (userSelectedSort == 4) {
+            sortByNumber(filteredList, true, 3); // sort year from low to high
+        }
+        return filteredList;
+    }
 
-
+    private void sortByNumber(ArrayList filteredList, boolean lowToHigh, int index) {
+        if (lowToHigh) {
+            Collections.sort(filteredList, new Comparator<String[]>() {
+                @Override
+                public int compare(String[] o1, String[] o2) {
+                    return Integer.valueOf(o1[index]) - Integer.valueOf(o2[index]);
+                }
+            });
+        } else {
+            Collections.sort(filteredList, new Comparator<String[]>() {
+                @Override
+                public int compare(String[] o1, String[] o2) {
+                    return Integer.valueOf(o2[index]) - Integer.valueOf(o1[index]);
+                }
+            });
+        }
     }
 
     private JPanel getVehicleDisplayPanel() {
