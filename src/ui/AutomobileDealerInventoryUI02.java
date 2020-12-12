@@ -142,6 +142,7 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
 
                     dealerInventoryData=line.split(splitBy);
                     getVehicals(dealerInventoryData);
+
 //                                          System.out.println(Arrays.toString(dealerInventoryData));
 //                        System.out.println("Dealers [Dealer ID =" + dealerInventoryData[0] + ", WebId=" + dealerInventoryData[1] + ", Category=" + dealerInventoryData[2] +
 //                                            ", year=" + dealerInventoryData[3] + ", Make=" + dealerInventoryData[4] + ", Model= " + dealerInventoryData[5] + ", Trim= " + dealerInventoryData[6]

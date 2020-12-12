@@ -1,6 +1,7 @@
 package ui;
 
 import javax.swing.*;
+import javax.xml.catalog.Catalog;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,6 +18,8 @@ public class SearchSort extends SearchSortAbstract{
     private ArrayList<String[]> selectedList;
     private final int FILTER_CATEGROY_COUNT = 7;
     private final Integer[] ORDER = {2, 4, 5, 7, 6, 8, 8};
+    private final String[] CATEGORIES = {"category", "make", "model", "type",
+            "body style", "above price", "below price"};
 
     @Override
     JPanel getMainDisplayPanel() {
@@ -226,8 +229,9 @@ public class SearchSort extends SearchSortAbstract{
     private ArrayList filter(ArrayList data) {
         ArrayList<String[]> result = new ArrayList<>();
         int count = 0;
-        for (int i = 0; i < selectedList.size(); i++) {
-            if (selectedList.get(count).length > 0) {
+        Set<String> keySet = container.keySet();
+        for (int i = 0; i < FILTER_CATEGROY_COUNT; i++) {
+            if (container.get(CATEGORIES[i]) != null) {
                 break;
             } else {
                 count++;
@@ -237,7 +241,7 @@ public class SearchSort extends SearchSortAbstract{
         addToResult(count, data, result);
         count++;
         for (int i = count; i < FILTER_CATEGROY_COUNT; i++) {
-            if (selectedList.get(i).length > 0) {
+            if (container.get(CATEGORIES[i]) != null) {
                 deleteFromResult(i, data, result);
             }
         }
@@ -246,10 +250,10 @@ public class SearchSort extends SearchSortAbstract{
 
 
     private void addToResult(int count, ArrayList<String[]> data, ArrayList<String[]> result) {
-        for (int i = 0; i < selectedList.get(count).length; i++) {
+        for (int i = 0; i < container.get(CATEGORIES[count]).size(); i++) {
             for (int j = 0; j < data.size(); j++) {
                 String[] currentData = data.get(j);
-                if (currentData[ORDER[count]].toLowerCase().equals(selectedList.get(count)[i].toLowerCase())) {
+                if (container.get(CATEGORIES[count]).contains(currentData[ORDER[count]].toLowerCase())) {
                     result.add(currentData);
                 }
             }
@@ -257,11 +261,11 @@ public class SearchSort extends SearchSortAbstract{
     }
 
     private void deleteFromResult(int count, ArrayList<String[]> data, ArrayList<String[]> result) {
-        for (int i = 0; i < selectedList.get(count).length; i++) {
-            for (int j = 0; j < data.size(); j++) {
-                String[] currentData = data.get(i);
-                if (!currentData[ORDER[count]].toLowerCase().equals(selectedList.get(count)[i].toLowerCase())) {
-                    data.remove(j);
+        for (int i = 0; i < container.get(CATEGORIES[count]).size(); i++) {
+            for (int j = 0; j < result.size(); j++) {
+                String[] currentData = result.get(i);
+                if (!container.get(CATEGORIES[count]).contains(currentData[ORDER[count]].toLowerCase())) {
+                    result.remove(j);
                 }
             }
         }

@@ -52,6 +52,7 @@ public class ShowAndSearchUI extends JFrame {
         jScrollPane2 = new JScrollPane();
         vehicleDisplay = new JTable();
         sortPanel = new JPanel();
+        fullInventoryData = new ArrayList<>();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainDisplay.setBackground(new Color(153, 153, 153));
         pageHeading.setFont(new Font("Tahoma", 0, 48)); // NOI18N
@@ -424,12 +425,12 @@ public class ShowAndSearchUI extends JFrame {
                     getVehicals(dealerInventoryData);
                     fullInventoryData=new ArrayList<String[]>();
                    fullInventoryData.add(dealerInventoryData);
-                    for(int i=0;i<fullInventoryData.size();i++){
-                        for(int j=0;j<fullInventoryData.get(i).length;j++){
-                            System.out.println(fullInventoryData.get(i)[j]);
-                        }
-
-                    }
+//                    for(int i=0;i<fullInventoryData.size();i++){
+//                        for(int j=0;j<fullInventoryData.get(i).length;j++){
+//                            System.out.println(fullInventoryData.get(i)[j]);
+//                        }
+//
+//                    }
 //                                          System.out.println(Arrays.toString(dealerInventoryData));
 //                        System.out.println("Dealers [Dealer ID =" + dealerInventoryData[0] + ", WebId=" + dealerInventoryData[1] + ", Category=" + dealerInventoryData[2] +
 //                                            ", year=" + dealerInventoryData[3] + ", Make=" + dealerInventoryData[4] + ", Model= " + dealerInventoryData[5] + ", Trim= " + dealerInventoryData[6]
