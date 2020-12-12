@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<item key="org.eclipse.egit.ui.internal.clone.GitSelectWizardPageWizardSel" value="0"/>
+	<item key="GitSelectRepositoryPage.lastRepository" value="/Users/yihangsun/Desktop/neu_info5100/AEDFinalYaqiCopy/.git"/>
 	<list key="RepositorySelectionPage.UsedUris">
 		<item value="file:///Users/yihangsun/Desktop/neu_info5100/AEDFinalYaqiCopy"/>
+	</list>
+	<list key="EGit.KnownHosts">
+		<item value="git.eclipse.org"/>
+		<item value="github.com"/>
+		<item value="bitbucket.org"/>
 	</list>
 	<section name="GitImportWizard">
 		<item key="GitProjectsImportPage.STORE_NESTED_PROJECTS" value="true"/>

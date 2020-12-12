@@ -8,7 +8,13 @@ import java.awt.event.ActionListener;
 import java.util.*;
 
 public class SearchSort extends SearchSortAbstract{
-    private JPanel mainDisplayPanel;
+//    private static final JButton category = new JButton();
+//    private static final JButton make = new JButton();
+//    private static final JButton type = new JButton();
+//    private static final JButton bodyStyle = new JButton();
+//    private static final JButton abovePrice = new JButton();
+//    private static final JButton belowPrice = new JButton();
+	private JPanel mainDisplayPanel;
     private JPanel filterPanel;
     private JPanel vehicleDisplayPanel;
     private JPanel sortPanel;
@@ -17,6 +23,7 @@ public class SearchSort extends SearchSortAbstract{
     private ArrayList<String[]> selectedList;
     private final int FILTER_CATEGROY_COUNT = 7;
     private final Integer[] ORDER = {2, 4, 5, 7, 6, 8, 8};
+    //private JButton[] names = {category, make, type, bodyStyle, abovePrice, belowPrice};
 
     @Override
     JPanel getMainDisplayPanel() {
@@ -57,50 +64,86 @@ public class SearchSort extends SearchSortAbstract{
         });
         return filterPanel;
     }
-
+//  System.out.println("Dealers [Dealer ID =" + dealerInventoryData[0] + ", WebId=" + dealerInventoryData[1] + ", Category=" + dealerInventoryData[2] +
+//  ", year=" + dealerInventoryData[3] + ", Make=" + dealerInventoryData[4] + ", Model= " + dealerInventoryData[5] + ", Trim= " + dealerInventoryData[6]
+//  + ", Type= " + dealerInventoryData[7] +", Price= " + dealerInventoryData[8] +"]");
     private void addFilterChoice(String choice, JPanel panel) {
     	JButton choiceButton = new JButton(choice);
     	JPopupMenu menu = new JPopupMenu();
+    	String[] data = AutomobileDealerInventoryUI02.getInventoryData();
+    	//System.out.println(data);
         if (choice.equals("CATEGORY")) {
         	menu.add(new JCheckBoxMenuItem("New"));
             menu.add(new JCheckBoxMenuItem("Certified Pre-Owned"));
             menu.add(new JCheckBoxMenuItem("Pre-Owned"));
         } else if (choice.equals("MAKE")) {
-        	menu.add(new JCheckBoxMenuItem("Chevrolet"));
-            menu.add(new JCheckBoxMenuItem("BOW"));
-            menu.add(new JCheckBoxMenuItem("Jeep"));
-            menu.add(new JCheckBoxMenuItem("Mini"));
-            menu.add(new JCheckBoxMenuItem("Nissan"));
-            menu.add(new JCheckBoxMenuItem("Toyota"));
+        	if (!container.containsKey("CATEGORY")) {
+	        	menu.add(new JCheckBoxMenuItem("Chevrolet"));
+	            menu.add(new JCheckBoxMenuItem("BOW"));
+	            menu.add(new JCheckBoxMenuItem("Jeep"));
+	            menu.add(new JCheckBoxMenuItem("Mini"));
+	            menu.add(new JCheckBoxMenuItem("Nissan"));
+	            menu.add(new JCheckBoxMenuItem("Toyota"));
+        	} else {
+        		for (int i = 0; i < data.length; i++) {
+        			if(container.get("CATEGORY").contains(data[2])) {
+        				menu.add(new JCheckBoxMenuItem(data[4]));
+        			}
+        		}
+        	}
         } else if (choice.equals("MODEL")) {
-        	menu.add(new JCheckBoxMenuItem("Acadia"));
-            menu.add(new JCheckBoxMenuItem("Blazer"));
-            menu.add(new JCheckBoxMenuItem("Bolt EV"));
+        	if (!container.containsKey("MAKE")) {
+	        	menu.add(new JCheckBoxMenuItem("Acadia"));
+	            menu.add(new JCheckBoxMenuItem("Blazer"));
+	            menu.add(new JCheckBoxMenuItem("Bolt EV"));
+        	} else {
+        		for (int i = 0; i < data.length; i++) {
+        			if(container.get("MAKE").contains(data[4])) {
+        				menu.add(new JCheckBoxMenuItem(data[5]));
+        			}
+        		}
+        	}
         } else if (choice.equals("TYPE")) {
-        	menu.add(new JCheckBoxMenuItem("Car"));
-            menu.add(new JCheckBoxMenuItem("Cargo Van"));
-            menu.add(new JCheckBoxMenuItem("SUV"));
-            menu.add(new JCheckBoxMenuItem("Truck"));
-            menu.add(new JCheckBoxMenuItem("Van"));
-            menu.add(new JCheckBoxMenuItem("Wagon"));
-        } else if (choice.equals("BODY STYLE")) {
-        	menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Long Bed"));
-            menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Short Bed"));
-            menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Standard Bed"));
+        	if (!container.containsKey("MODEL")) {
+        		menu.add(new JCheckBoxMenuItem("Car"));
+                menu.add(new JCheckBoxMenuItem("Cargo Van"));
+                menu.add(new JCheckBoxMenuItem("SUV"));
+                menu.add(new JCheckBoxMenuItem("Truck"));
+                menu.add(new JCheckBoxMenuItem("Van"));
+                menu.add(new JCheckBoxMenuItem("Wagon"));
+        	} else {
+        		for (int i = 0; i < data.length; i++) {
+        			if(container.get("MODEL").contains(data[5])) {
+        				menu.add(new JCheckBoxMenuItem(data[7]));
+        			}
+        		}
+        	}
+//        } else if (choice.equals("BODY STYLE")) {
+//        	menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Long Bed"));
+//            menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Short Bed"));
+//            menu.add(new JCheckBoxMenuItem("Crew Crab Pickup - Standard Bed"));
         } else if (choice.equals("Year")) {
-            menu.add(new JCheckBoxMenuItem("2009"));
-            menu.add(new JCheckBoxMenuItem("2010"));
-            menu.add(new JCheckBoxMenuItem("2011"));
-            menu.add(new JCheckBoxMenuItem("2012"));
-            menu.add(new JCheckBoxMenuItem("2013"));
-            menu.add(new JCheckBoxMenuItem("2014"));
-            menu.add(new JCheckBoxMenuItem("2015"));
-            menu.add(new JCheckBoxMenuItem("2016"));
-            menu.add(new JCheckBoxMenuItem("2017"));
-            menu.add(new JCheckBoxMenuItem("2018"));
-            menu.add(new JCheckBoxMenuItem("2019"));
-            menu.add(new JCheckBoxMenuItem("2020"));
-            menu.add(new JCheckBoxMenuItem("2021"));
+        	if (!container.containsKey("TYPE")) {
+	            menu.add(new JCheckBoxMenuItem("2009"));
+	            menu.add(new JCheckBoxMenuItem("2010"));
+	            menu.add(new JCheckBoxMenuItem("2011"));
+	            menu.add(new JCheckBoxMenuItem("2012"));
+	            menu.add(new JCheckBoxMenuItem("2013"));
+	            menu.add(new JCheckBoxMenuItem("2014"));
+	            menu.add(new JCheckBoxMenuItem("2015"));
+	            menu.add(new JCheckBoxMenuItem("2016"));
+	            menu.add(new JCheckBoxMenuItem("2017"));
+	            menu.add(new JCheckBoxMenuItem("2018"));
+	            menu.add(new JCheckBoxMenuItem("2019"));
+	            menu.add(new JCheckBoxMenuItem("2020"));
+	            menu.add(new JCheckBoxMenuItem("2021"));
+        	} else {
+        		for (int i = 0; i < data.length; i++) {
+        			if(container.get("TYPE").contains(data[7])) {
+        				menu.add(new JCheckBoxMenuItem(data[3]));
+        			}
+        		}
+        	}
         } else if (choice.equals("ABOVE PRICE")) {
         	menu.add(new JCheckBoxMenuItem("1000"));
         	menu.add(new JCheckBoxMenuItem("5000"));
@@ -226,8 +269,8 @@ public class SearchSort extends SearchSortAbstract{
     private ArrayList filter(ArrayList data) {
         ArrayList<String[]> result = new ArrayList<>();
         int count = 0;
-        for (int i = 0; i < selectedList.size(); i++) {
-            if (selectedList.get(count).length > 0) {
+        for (String key : container) {
+            if (container.get(key).size() > 0) {
                 break;
             } else {
                 count++;
@@ -246,7 +289,7 @@ public class SearchSort extends SearchSortAbstract{
 
 
     private void addToResult(int count, ArrayList<String[]> data, ArrayList<String[]> result) {
-        for (int i = 0; i < selectedList.get(count).length; i++) {
+        for (int i = 0; i < container.get(count).size(); i++) {
             for (int j = 0; j < data.size(); j++) {
                 String[] currentData = data.get(j);
                 if (currentData[ORDER[count]].toLowerCase().equals(selectedList.get(count)[i].toLowerCase())) {

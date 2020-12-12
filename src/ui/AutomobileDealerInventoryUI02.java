@@ -21,7 +21,7 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
     private JLabel pageHeading;
     private JTable vehicleDisplay;
     String dealerName= "gmps-aj-dohmann";
-    String[] dealerInventoryData;
+    static String[] dealerInventoryData;
     /**
      * Creates new form Inventory
      */
@@ -29,7 +29,12 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
 
         initComponents();
     }
-
+    
+    @SuppressWarnings("unused") 
+    public static String[] getInventoryData() {
+    	return dealerInventoryData;
+    }
+    
     private void initComponents() {
 
         mainDisplay = new javax.swing.JPanel();
