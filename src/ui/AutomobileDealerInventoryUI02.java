@@ -15,7 +15,11 @@ import java.net.URL;
 
 public class AutomobileDealerInventoryUI02 extends JFrame {
 
-    // Variables
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	// Variables
     private JScrollPane jScrollPane2;
     private JPanel mainDisplay;
     private JLabel pageHeading;
@@ -30,7 +34,6 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
         initComponents();
     }
     
-    @SuppressWarnings("unused") 
     public static String[] getInventoryData() {
     	return dealerInventoryData;
     }
@@ -93,7 +96,7 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
 
 
     private void getVehicals(String[] dealerInventoryData) throws MalformedURLException {
-        int maxRowCountPerPage=50;
+        int maxRowCountPerPage = 50;
         String model=dealerInventoryData[5];
         String make=dealerInventoryData[4];
         String type=dealerInventoryData[7];
@@ -147,6 +150,7 @@ public class AutomobileDealerInventoryUI02 extends JFrame {
 
                     dealerInventoryData=line.split(splitBy);
                     getVehicals(dealerInventoryData);
+
 //                                          System.out.println(Arrays.toString(dealerInventoryData));
 //                        System.out.println("Dealers [Dealer ID =" + dealerInventoryData[0] + ", WebId=" + dealerInventoryData[1] + ", Category=" + dealerInventoryData[2] +
 //                                            ", year=" + dealerInventoryData[3] + ", Make=" + dealerInventoryData[4] + ", Model= " + dealerInventoryData[5] + ", Trim= " + dealerInventoryData[6]

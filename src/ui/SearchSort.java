@@ -1,29 +1,22 @@
 package ui;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 
 public class SearchSort extends SearchSortAbstract{
-//    private static final JButton category = new JButton();
-//    private static final JButton make = new JButton();
-//    private static final JButton type = new JButton();
-//    private static final JButton bodyStyle = new JButton();
-//    private static final JButton abovePrice = new JButton();
-//    private static final JButton belowPrice = new JButton();
 	private JPanel mainDisplayPanel;
     private JPanel filterPanel;
     private JPanel vehicleDisplayPanel;
     private JPanel sortPanel;
     private HashMap<String, HashSet<String>> container;
     private final int[] selectedSort = {0};
-    private ArrayList<String[]> selectedList;
     private final int FILTER_CATEGROY_COUNT = 7;
     private final Integer[] ORDER = {2, 4, 5, 7, 6, 8, 8};
-    //private JButton[] names = {category, make, type, bodyStyle, abovePrice, belowPrice};
+    private final String[] CATEGORIES = {"category", "make", "model", "type",
+            "body style", "above price", "below price"};
 
     @Override
     JPanel getMainDisplayPanel() {
@@ -195,8 +188,7 @@ public class SearchSort extends SearchSortAbstract{
 			 */
 			private static final long serialVersionUID = 1L;
 
-			@Override
-            public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
                 menu.show(choiceButton, 0, choiceButton.getHeight());
             }
         });
@@ -204,7 +196,7 @@ public class SearchSort extends SearchSortAbstract{
         panel.add(choiceButton);
     }
 
-    // sort the result as user selected and provide the result to display panel to display
+ // sort the result as user selected and provide the result to display panel to display
     private JPanel getSortPanel() {
         //UI for sorting Panel for sorting the result on the basis on certain criterias
 
@@ -252,8 +244,9 @@ public class SearchSort extends SearchSortAbstract{
             public void actionPerformed(ActionEvent e) {
                 // call the sort method to implement sorting based on user's selection
                 ShowAndSearchUI ui = new ShowAndSearchUI();
-                ArrayList filteredList = filter(ui.fullInventoryData);
-                ArrayList sortedList = sort(selectedSort[0], filteredList); // final sorted list
+                ArrayList<String[]> filteredList = filter(ui.fullInventoryData);
+                // this value is not used!
+                ArrayList<String[]> sortedList = sort(selectedSort[0], filteredList); // final sorted list
                 // TODO: Need to integrate with Deepika
 
             }
@@ -266,11 +259,12 @@ public class SearchSort extends SearchSortAbstract{
     }
 
     // filter the data based on selected filter choices
-    private ArrayList filter(ArrayList data) {
+    private ArrayList<String[]> filter(ArrayList<String[]> data) {
         ArrayList<String[]> result = new ArrayList<>();
         int count = 0;
-        for (String key : container) {
-            if (container.get(key).size() > 0) {
+        //Set<String> keySet = container.keySet();
+        for (int i = 0; i < FILTER_CATEGROY_COUNT; i++) {
+            if (container.get(CATEGORIES[i]) != null) {
                 break;
             } else {
                 count++;
@@ -280,7 +274,7 @@ public class SearchSort extends SearchSortAbstract{
         addToResult(count, data, result);
         count++;
         for (int i = count; i < FILTER_CATEGROY_COUNT; i++) {
-            if (selectedList.get(i).length > 0) {
+            if (container.get(CATEGORIES[i]) != null) {
                 deleteFromResult(i, data, result);
             }
         }
@@ -289,10 +283,10 @@ public class SearchSort extends SearchSortAbstract{
 
 
     private void addToResult(int count, ArrayList<String[]> data, ArrayList<String[]> result) {
-        for (int i = 0; i < container.get(count).size(); i++) {
+        for (int i = 0; i < container.get(CATEGORIES[count]).size(); i++) {
             for (int j = 0; j < data.size(); j++) {
                 String[] currentData = data.get(j);
-                if (currentData[ORDER[count]].toLowerCase().equals(selectedList.get(count)[i].toLowerCase())) {
+                if (container.get(CATEGORIES[count]).contains(currentData[ORDER[count]].toLowerCase())) {
                     result.add(currentData);
                 }
             }
@@ -300,11 +294,11 @@ public class SearchSort extends SearchSortAbstract{
     }
 
     private void deleteFromResult(int count, ArrayList<String[]> data, ArrayList<String[]> result) {
-        for (int i = 0; i < selectedList.get(count).length; i++) {
-            for (int j = 0; j < data.size(); j++) {
-                String[] currentData = data.get(i);
-                if (!currentData[ORDER[count]].toLowerCase().equals(selectedList.get(count)[i].toLowerCase())) {
-                    data.remove(j);
+        for (int i = 0; i < container.get(CATEGORIES[count]).size(); i++) {
+            for (int j = 0; j < result.size(); j++) {
+                String[] currentData = result.get(i);
+                if (!container.get(CATEGORIES[count]).contains(currentData[ORDER[count]].toLowerCase())) {
+                    result.remove(j);
                 }
             }
         }
@@ -313,7 +307,7 @@ public class SearchSort extends SearchSortAbstract{
 
     // Parameter: User's selected sorting preference
     // Select and sort the vehicle objects and store it in a LinkedHashSet
-    private ArrayList sort(int userSelectedSort, ArrayList filteredList) {
+    private ArrayList<String[]> sort(int userSelectedSort, ArrayList<String[]> filteredList) {
         if (userSelectedSort == 1) {
             sortByNumber(filteredList, false, 8); // sort price from high to low
         } else if (userSelectedSort == 2) {
@@ -326,7 +320,7 @@ public class SearchSort extends SearchSortAbstract{
         return filteredList;
     }
 
-    private void sortByNumber(ArrayList filteredList, boolean lowToHigh, int index) {
+    private void sortByNumber(ArrayList<String[]> filteredList, boolean lowToHigh, int index) {
         if (lowToHigh) {
             Collections.sort(filteredList, new Comparator<String[]>() {
                 @Override
@@ -356,7 +350,7 @@ public class SearchSort extends SearchSortAbstract{
 
 
     public static void main(String[] args) {
-        SearchSort searchSortObj=new SearchSort();
+        SearchSort searchSortObj = new SearchSort();
         System.out.println("AppUI main starting...");
     }
 
