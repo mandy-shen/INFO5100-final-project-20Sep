@@ -390,9 +390,10 @@ public class ShowAndSearchUI_m01 extends JFrame implements ActionListener {
                             limit(1).collect(Collectors.toList());
                     System.out.println("collect.get(0) = " + Arrays.toString(collect.get(0)));
 
-
-                    new VehicleDetailNew(collect.get(0)).frame.setVisible(true);
-                    // new ShowAndSearchUI_h().setVisible(true);
+                    VehicleDetailNew v = new VehicleDetailNew(collect.get(0));
+                    v.frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                    v.frame.setVisible(true);
+                    
                     dispose();
                 }
 
