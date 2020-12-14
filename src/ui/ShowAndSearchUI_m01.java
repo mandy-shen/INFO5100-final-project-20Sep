@@ -39,16 +39,18 @@ public class ShowAndSearchUI_m01 extends JFrame implements ActionListener {
 
 
     public ShowAndSearchUI_m01() {
-        initComponents(dealerName);
+        initComponents();
     }
 
     public ShowAndSearchUI_m01(String dealerName) {
-        initComponents(dealerName);
+        initComponents();
+        this.dealerName = dealerName;
     }
 
 
+
     @SuppressWarnings("unchecked")
-    private void initComponents(String dealerName) {
+    private void initComponents() {
 
         mainDisplay = new JPanel();
         pageHeading = new JLabel();
