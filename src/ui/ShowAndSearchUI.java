@@ -416,15 +416,14 @@ public class ShowAndSearchUI extends JFrame {
             String line = "";
             String splitBy = "~";
 
-            try
-            {
+            try {
                 BufferedReader br = new BufferedReader(new FileReader(PATH + dealerName));
-                while ((line = br.readLine()) != null){
+                while ((line = br.readLine()) != null) {
 
-                    dealerInventoryData=line.split(splitBy);
+                    dealerInventoryData = line.split(splitBy);
                     getVehicals(dealerInventoryData);
-                    fullInventoryData=new ArrayList<String[]>();
-                   fullInventoryData.add(dealerInventoryData);
+                    fullInventoryData = new ArrayList<String[]>();
+                    fullInventoryData.add(dealerInventoryData);
 //                    for(int i=0;i<fullInventoryData.size();i++){
 //                        for(int j=0;j<fullInventoryData.get(i).length;j++){
 //                            System.out.println(fullInventoryData.get(i)[j]);
@@ -436,14 +435,16 @@ public class ShowAndSearchUI extends JFrame {
 //                                            ", year=" + dealerInventoryData[3] + ", Make=" + dealerInventoryData[4] + ", Model= " + dealerInventoryData[5] + ", Trim= " + dealerInventoryData[6]
 //                                            + ", Type= " + dealerInventoryData[7] +", Price= " + dealerInventoryData[8] +"]");
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
     }
 
+    public ArrayList<String[]> getFullInventoryData() {
+        return fullInventoryData;
+    }
 
     public static void main(String args[]) {
 
