@@ -13,7 +13,7 @@ public class SearchSort extends SearchSortAbstract{
     private JPanel sortPanel;
     private HashMap<String, HashSet<String>> container;
     private final int[] selectedSort = {0};
-    private final int FILTER_CATEGROY_COUNT = 7;
+    private final int FILTER_CATEGROY_COUNT = 6;
     private final Integer[] ORDER = {2, 4, 5, 7, 6, 8, 8};
     private final String[] CATEGORIES = {"category", "make", "model", "type",
             "body style", "above price", "below price"};
@@ -44,7 +44,7 @@ public class SearchSort extends SearchSortAbstract{
         addFilterChoice("MAKE", filterPanel);
         addFilterChoice("MODEL", filterPanel);
         addFilterChoice("TYPE", filterPanel);
-        addFilterChoice("BODY STYLE", filterPanel);
+        // addFilterChoice("BODY STYLE", filterPanel);
         addFilterChoice("ABOVE PRICE", filterPanel);
         addFilterChoice("BELOW PRICE", filterPanel);
         addFilterChoice("MORE", filterPanel);
@@ -63,7 +63,7 @@ public class SearchSort extends SearchSortAbstract{
     private void addFilterChoice(String choice, JPanel panel) {
     	JButton choiceButton = new JButton(choice);
     	JPopupMenu menu = new JPopupMenu();
-    	String[] data = AutomobileDealerInventoryUI02.getInventoryData();
+        ArrayList<String[]> data = ShowAndSearchUI.getFullInventoryData();
     	//System.out.println(data);
         if (choice.equals("CATEGORY")) {
         	menu.add(new JCheckBoxMenuItem("New"));
@@ -78,10 +78,10 @@ public class SearchSort extends SearchSortAbstract{
 	            menu.add(new JCheckBoxMenuItem("Nissan"));
 	            menu.add(new JCheckBoxMenuItem("Toyota"));
         	} else {
-        		for (int i = 0; i < data.length; i++) {
-        			if(container.get("CATEGORY").contains(data[2])) {
-        				menu.add(new JCheckBoxMenuItem(data[4]));
-        			}
+        		for (int i = 0; i < data.size(); i++) {
+                    if (container.get("CATEGORY").contains(data.get(i)[2])) {
+                        menu.add(new JCheckBoxMenuItem(data.get(i)[4]));
+                    }
         		}
         	}
         } else if (choice.equals("MODEL")) {
@@ -90,11 +90,11 @@ public class SearchSort extends SearchSortAbstract{
 	            menu.add(new JCheckBoxMenuItem("Blazer"));
 	            menu.add(new JCheckBoxMenuItem("Bolt EV"));
         	} else {
-        		for (int i = 0; i < data.length; i++) {
-        			if(container.get("MAKE").contains(data[4])) {
-        				menu.add(new JCheckBoxMenuItem(data[5]));
-        			}
-        		}
+                for (int i = 0; i < data.size(); i++) {
+                    if (container.get("CATEGORY").contains(data.get(i)[4])) {
+                        menu.add(new JCheckBoxMenuItem(data.get(i)[5]));
+                    }
+                }
         	}
         } else if (choice.equals("TYPE")) {
         	if (!container.containsKey("MODEL")) {
@@ -105,9 +105,9 @@ public class SearchSort extends SearchSortAbstract{
                 menu.add(new JCheckBoxMenuItem("Van"));
                 menu.add(new JCheckBoxMenuItem("Wagon"));
         	} else {
-        		for (int i = 0; i < data.length; i++) {
-        			if(container.get("MODEL").contains(data[5])) {
-        				menu.add(new JCheckBoxMenuItem(data[7]));
+        		for (int i = 0; i < data.size(); i++) {
+        			if(container.get("MODEL").contains(data.get(i)[5])) {
+        				menu.add(new JCheckBoxMenuItem(data.get(i)[7]));
         			}
         		}
         	}
@@ -131,9 +131,9 @@ public class SearchSort extends SearchSortAbstract{
 	            menu.add(new JCheckBoxMenuItem("2020"));
 	            menu.add(new JCheckBoxMenuItem("2021"));
         	} else {
-        		for (int i = 0; i < data.length; i++) {
-        			if(container.get("TYPE").contains(data[7])) {
-        				menu.add(new JCheckBoxMenuItem(data[3]));
+        		for (int i = 0; i < data.size(); i++) {
+        			if(container.get("TYPE").contains(data.get(i)[7])) {
+        				menu.add(new JCheckBoxMenuItem(data.get(i)[3]));
         			}
         		}
         	}
