@@ -329,11 +329,6 @@ public class ShowAndSearchUI2 extends JFrame {
     }
 
 
-
-
-
-
-
     private JTable getTable(String dealerName) {
         fullInventoryData=readDealerInventory(ShowAndSearchUI2.dealerName); //Reading Inventory data of dealer
         vehicleDisplay.setRowHeight(200);
@@ -357,7 +352,6 @@ public class ShowAndSearchUI2 extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 JTable source = (JTable)e.getSource();
-
                 int row = source.rowAtPoint( e.getPoint() );
                 int column = source.columnAtPoint( e.getPoint() );
                 //String s=source.getModel().getValueAt(row, column)+"";
@@ -365,12 +359,12 @@ public class ShowAndSearchUI2 extends JFrame {
                 //Storing selected data for UC3
                     ArrayList<String[]> selectedRowData = new ArrayList<>();
                     selectedRowData.add(fullInventoryData.get(row));
-//                for(int i=0;i<selectedRowData.size();i++){
-//                    for(int j=0;j<selectedRowData.get(i).length;j++){
-//                        System.out.println(selectedRowData.get(i)[j]);
-//                    }
-//
-//                }
+                for(int i=0;i<selectedRowData.size();i++){
+                    for(int j=0;j<selectedRowData.get(i).length;j++){
+                        System.out.println(selectedRowData.get(i)[j]);
+                    }
+
+                }
                 if(column==4) {
                         JOptionPane.showMessageDialog(null, "Call UC3");
                     }
