@@ -18,10 +18,10 @@ import java.util.Locale;
 
 public class IncentiveApiUI extends IncentiveApiUIAbstract {
 
-    private IncentiveApi incentiveApi;
     private JPanel centerPanel;
 
     // sub panel group
+    private IncentiveApi incentiveApi;
     private IncentiveUI incentiveUI;
     private CountdownTimeJob timeJob;
 

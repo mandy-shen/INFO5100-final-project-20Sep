@@ -1,6 +1,12 @@
 package ui;
 
 
+import dao.Special;
+import dao.Vehicle;
+import service.CountdownTimeJob;
+import service.IncentiveApi;
+import service.IncentiveApiImpl;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -16,10 +22,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.logging.Filter;
 
 public class ShowAndSearchUI2 extends JFrame {
@@ -40,8 +43,17 @@ public class ShowAndSearchUI2 extends JFrame {
     private static final String PATH ="././data/";
 
 
+    // for case6
+    private IncentiveApi incentiveApi;
+    private IncentiveUI incentiveUI;
+    private CountdownTimeJob timeJob;
 
     public ShowAndSearchUI2(String dealerName) {
+        // for case6
+        incentiveUI = new IncentiveUI();
+        timeJob = new CountdownTimeJob();
+        timeJob.addObserver(incentiveUI);
+
         this.dealerName=dealerName;
         initComponents();
 
@@ -383,10 +395,30 @@ public class ShowAndSearchUI2 extends JFrame {
 
                 }
                 if(column==4) {
-                        JOptionPane.showMessageDialog(null, "Call UC3");
-                    }
+                    JOptionPane.showMessageDialog(null, "Call UC3");
+                }
                 if(column==5){
-                    JOptionPane.showMessageDialog(null, "Call UC6");
+                    if (row > 0) {
+                        if (incentiveApi == null)
+                            incentiveApi = new IncentiveApiImpl();
+
+                        Vehicle vehicle = new Vehicle("1f3f02f6-1d69-4874-b976-e45d0d44a5bc"); // TODO: case6 replaced Id
+                        vehicle.setVehicleId("44d6039e-aebe-46ed-893e-b401a8132c43"); // TODO: case6 replaced Id
+                        vehicle.setPrice(fullInventoryData.get(row)[8]);
+                        SpecialModel specialModel = incentiveApi.updateSpecialPrice(vehicle);
+                        Special special = specialModel.getSpecial();
+
+                        if (special != null) {
+                            timeJob.start(specialModel);
+                            JOptionPane.showConfirmDialog(null, incentiveUI, "Incentive details",
+                                    JOptionPane.CLOSED_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+                            if (specialModel.getSpecial().getEndDate().getTime() < new Date().getTime()) {
+                                source.getComponents();
+                            }
+                            timeJob.stop();
+                        }
+                    }
                 }
 
             }
@@ -443,7 +475,7 @@ public class ShowAndSearchUI2 extends JFrame {
         //System.out.println(vehicleImagePath);
 
         for(int i=0;i<arrayListOfString.size();i++){
-            vehicleImagePath=arrayListOfString.get(i)[9];
+            vehicleImagePath=arrayListOfString.get(i)[8];
            // System.out.println(vehicleImagePath);
             try {
                 url =new URL(vehicleImagePath);
@@ -462,10 +494,31 @@ public class ShowAndSearchUI2 extends JFrame {
             Image img = imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
             JLabel imageLabel=new JLabel();
             JButton viewMore_button=new JButton("View More");
-            JButton showIncentives=new JButton("Show Incentives");
+            JButton showIncentives=new JButton("Learn About Discount!!!");
             imageLabel.setIcon(new ImageIcon(img));
+
+
+            float specialPrice = 0.00f;
+            if (i > 0) {
+                incentiveApi = new IncentiveApiImpl();
+
+                Vehicle vehicle = new Vehicle("1f3f02f6-1d69-4874-b976-e45d0d44a5bc"); // TODO: case6 replaced Id
+                vehicle.setVehicleId("44d6039e-aebe-46ed-893e-b401a8132c43"); // TODO: case6 replaced Id
+                vehicle.setPrice(arrayListOfString.get(i)[8]);
+                SpecialModel specialModel = incentiveApi.updateSpecialPrice(vehicle);
+                Special special = specialModel.getSpecial();
+
+                if (special != null) {
+                    specialPrice = specialModel.getSpecialPrice();
+                } else {
+                    showIncentives.setVisible(false);
+                }
+            }
+
+
+
             model.addRow(new Object[] { arrayListOfString.get(i)[5],arrayListOfString.get(i)[7],arrayListOfString.get(i)[3] ,
-                    arrayListOfString.get(i)[8],viewMore_button,showIncentives,imageLabel,"Show special price"});
+                    arrayListOfString.get(i)[8],viewMore_button,showIncentives,imageLabel,specialPrice});
         }
 
     }
