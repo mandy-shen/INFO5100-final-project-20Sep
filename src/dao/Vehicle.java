@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.UUID;
 
 public class Vehicle extends GenericModel{
-	
+
 	private String vehicleId;
 	private String dealerId;
 	private String year;

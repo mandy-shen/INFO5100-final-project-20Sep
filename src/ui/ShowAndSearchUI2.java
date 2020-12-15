@@ -22,6 +22,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.DateTimeException;
 import java.util.*;
 import java.util.logging.Filter;
 
@@ -399,6 +400,7 @@ public class ShowAndSearchUI2 extends JFrame {
                 }
                 if(column==5){
                     if (row > 0) {
+
                         if (incentiveApi == null)
                             incentiveApi = new IncentiveApiImpl();
 
@@ -408,11 +410,14 @@ public class ShowAndSearchUI2 extends JFrame {
                         SpecialModel specialModel = incentiveApi.updateSpecialPrice(vehicle);
                         Special special = specialModel.getSpecial();
 
-                        if (special != null) {
+                        if (special != null && special.getStartDate().getTime() <= new Date().getTime()
+                                && new Date().getTime() < special.getEndDate().getTime()) {
                             timeJob.start(specialModel);
                             JOptionPane.showConfirmDialog(null, incentiveUI, "Incentive details",
                                     JOptionPane.CLOSED_OPTION, JOptionPane.PLAIN_MESSAGE);
 
+                            System.out.println("specialModel.getSpecial().getEndDate().getTime(): " + specialModel.getSpecial().getEndDate().getTime());
+                            System.out.println("new Date().getTime(): " + new Date().getTime());
                             if (specialModel.getSpecial().getEndDate().getTime() < new Date().getTime()) {
                                 source.getComponents();
                             }
@@ -508,14 +513,15 @@ public class ShowAndSearchUI2 extends JFrame {
                 SpecialModel specialModel = incentiveApi.updateSpecialPrice(vehicle);
                 Special special = specialModel.getSpecial();
 
-                if (special != null) {
+                if ((special != null) && (special.getStartDate().getTime() <= new Date().getTime())
+                        && (new Date().getTime() <= special.getEndDate().getTime())) {
                     specialPrice = specialModel.getSpecialPrice();
                 } else {
+                    showIncentives.setText("No discount now");
+                    showIncentives.setEnabled(false);
                     showIncentives.setVisible(false);
                 }
             }
-
-
 
             model.addRow(new Object[] { arrayListOfString.get(i)[5],arrayListOfString.get(i)[7],arrayListOfString.get(i)[3] ,
                     arrayListOfString.get(i)[8],viewMore_button,showIncentives,imageLabel,specialPrice});

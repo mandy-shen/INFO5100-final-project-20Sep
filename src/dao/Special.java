@@ -17,7 +17,7 @@ public class Special extends GenericModel{
 	private boolean isValidOnLease;
 	private boolean isValidOnCheckPayment;
 
-	private String dealerId;
+	private String dealerId = "1f3f02f6-1d69-4874-b976-e45d0d44a5bc";
 
 	private String valueOfVehicle;
 	private String year;
