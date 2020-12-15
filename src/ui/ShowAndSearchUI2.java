@@ -416,8 +416,6 @@ public class ShowAndSearchUI2 extends JFrame {
                             JOptionPane.showConfirmDialog(null, incentiveUI, "Incentive details",
                                     JOptionPane.CLOSED_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-                            System.out.println("specialModel.getSpecial().getEndDate().getTime(): " + specialModel.getSpecial().getEndDate().getTime());
-                            System.out.println("new Date().getTime(): " + new Date().getTime());
                             if (specialModel.getSpecial().getEndDate().getTime() < new Date().getTime()) {
                                 source.getComponents();
                             }
