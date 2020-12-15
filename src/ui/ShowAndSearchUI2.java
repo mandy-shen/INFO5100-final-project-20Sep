@@ -17,7 +17,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.logging.Filter;
 
 public class ShowAndSearchUI2 extends JFrame {
 
@@ -30,6 +33,7 @@ public class ShowAndSearchUI2 extends JFrame {
     private JPanel filterPanel;
     private JPanel mainDisplay;
     private final int[] selectedSort = {0};
+    private HashMap<String, HashSet<String>> container;
     String[] dealerInventoryData;
     ArrayList<String[]> fullInventoryData;
     static String dealerName= "gmps-aj-dohmann";
@@ -137,9 +141,10 @@ public class ShowAndSearchUI2 extends JFrame {
 
 
     private JPanel getFilterPanel() {
-        //code for UI for filterPanel  i.e filters for searching
-        selected = new HashSet<String>();
+        //code for UI for filterPanel  ie filters for searching
+        container = new HashMap<String, HashSet<String>>();
         filterPanel = new JPanel();
+        filterPanel.setBackground(Color.red);
         filterPanel.add(new JLabel("FILTER"));
         addFilterChoice("CATEGORY", filterPanel);
         addFilterChoice("MAKE", filterPanel);
@@ -152,7 +157,8 @@ public class ShowAndSearchUI2 extends JFrame {
         ((AbstractButton) filterPanel.add(new JButton("Clear All"))).addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                selected.clear();
+                container.clear();
+                //System.out.println(container.size());
             }
         });
         return filterPanel;
@@ -227,12 +233,16 @@ public class ShowAndSearchUI2 extends JFrame {
         for (Component item: menu.getComponents()) {
             ((AbstractButton) item).addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    String cur = e.toString().split(",")[1].substring(4);
                     if (!((JCheckBoxMenuItem)item).isSelected()) {
-                        selected.remove(e.toString().split(",")[1].substring(4));
+                        container.get(choice).remove(cur);
                     } else {
-                        selected.add(e.toString().split(",")[1].substring(4));
+                        if (!container.containsKey(choice)) {
+                            container.put(choice, new HashSet<String>());
+                        }
+                        container.get(choice).add(cur.toLowerCase());
                     }
-                    // System.out.println(selected);
+                    //System.out.println(container);
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ie) {
@@ -243,7 +253,11 @@ public class ShowAndSearchUI2 extends JFrame {
 
         // combine each button with CheckBoxMenu
         choiceButton.setAction(new AbstractAction(choice) {
+            /**
+             *
+             */
             private static final long serialVersionUID = 1L;
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 menu.show(choiceButton, 0, choiceButton.getHeight());
@@ -263,7 +277,7 @@ public class ShowAndSearchUI2 extends JFrame {
         JPanel temp = new JPanel();
         JTextArea text = new JTextArea("");
         temp.add(text);
-        String[] sortOptions = {"", "Price: High to low", "Price: Low to High", "Year: High to Low",
+        String[] sortOptions = {"No Preference", "Price: High to low", "Price: Low to High", "Year: High to Low",
                 "Year: Low to High"};
         JComboBox sortList = new JComboBox(sortOptions);
         sortList.setSelectedIndex(0);
@@ -272,6 +286,8 @@ public class ShowAndSearchUI2 extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int s = (int) sortList.getSelectedIndex();
                 switch(s) {
+                    case 0:
+                        selectedSort[0] = 0;
                     case 1:
                         text.setText("Selected: Sort price from high to low");
                         selectedSort[0] = 1;
@@ -309,8 +325,17 @@ public class ShowAndSearchUI2 extends JFrame {
                 //SearchSort searchSortObj=new SearchSort();
               //  ArrayList filteredList = searchSortObj.filter(ui.fullInventoryData);
                // ArrayList sortedList = searchSortObj.sort(selectedSort[0], filteredList);
-
-
+                ArrayList<String[]> filteredList = FilterAndSort.filter(fullInventoryData, container);
+                ArrayList<String[]> sortedList = FilterAndSort.sort(selectedSort[0], filteredList);
+//                System.out.println(container);
+//                for (String[] a : sortedList) {
+//                    System.out.println(Arrays.toString(a));
+//                }
+                try {
+                    setTableCellValues(sortedList);
+                } catch (MalformedURLException malformedURLException) {
+                    malformedURLException.printStackTrace();
+                }
             }
         });
         sortPanel.add(confirm);
@@ -318,14 +343,6 @@ public class ShowAndSearchUI2 extends JFrame {
         /* Need to get data from filter panel and sort the data using the selected sort method.
          *  */
         return sortPanel;
-    }
-//
-//     Parameter: User's selected sorting preference
-//     Select and sort the vehicle objects and store it in a LinkedHashSet
-    private void sort(int userSelectedSort) {
-        //System.out.println(userSelectedSort);
-        // TODO
-
     }
 
 
