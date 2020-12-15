@@ -413,6 +413,7 @@ public class ShowAndSearchUI extends JFrame {
 
     private void readDealerInventory(String dealerName) {
         {
+            fullInventoryData = new ArrayList<String[]>();
             String line = "";
             String splitBy = "~";
 
@@ -422,7 +423,6 @@ public class ShowAndSearchUI extends JFrame {
 
                     dealerInventoryData = line.split(splitBy);
                     getVehicals(dealerInventoryData);
-                    fullInventoryData = new ArrayList<String[]>();
                     fullInventoryData.add(dealerInventoryData);
 //                    for(int i=0;i<fullInventoryData.size();i++){
 //                        for(int j=0;j<fullInventoryData.get(i).length;j++){
