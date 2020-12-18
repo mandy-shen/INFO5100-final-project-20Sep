@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import dao.Special;
+import dto.Dealer;
 import ui.SpecialModel;
 import dao.Vehicle;
 import dto.AbstractPersistent;
@@ -44,13 +45,31 @@ public final class IncentiveApiImpl implements IncentiveApi {
 	 * at the same time.
 	 */
 	@Override
-	public SpecialModel updateSpecialPrice(Vehicle vehicle) {
+	public SpecialModel updateSpecialPrice(String dealerName, String vehicleId, String oldPrice) {
+		String dealerId = "";
+		List<dao.Dealer> dealerList = dao.getAllDealers();
+		for (dao.Dealer dealer: dealerList) {
+			if (dealerName.equals(dealer.getDealerName()))
+				dealerId = dealer.getId();
+		}
 
-		String id = vehicle.getVehicleId();
-		List<Special> sList = dao.getAllSpecials(vehicle.getDealerId());
+		if (dealerId==null || "".equals(dealerId)) {
+			return new SpecialModel();
+		}
 
-		SpecialModel model = new SpecialModel(vehicle);
-		float price = Float.parseFloat(vehicle.getPrice());
+		if (vehicleId==null || "".equals(vehicleId)) {
+			return new SpecialModel();
+		}
+
+		if (oldPrice==null || "".equals(oldPrice)) {
+			return new SpecialModel();
+		}
+
+		String id = vehicleId;
+		List<Special> sList = dao.getAllSpecials(dealerId);
+
+		SpecialModel model = new SpecialModel();
+		float price = Float.parseFloat(oldPrice);
 
 		List<SpecialModel> allSpecials = new ArrayList<>();
 		List<Boolean> allHaveSpecial = new ArrayList<>();
@@ -104,7 +123,7 @@ public final class IncentiveApiImpl implements IncentiveApi {
 		//generate allSpecials
 		for (int j = 0; j < sList.size(); j++) {
 			Special s = sList.get(j);
-			SpecialModel vm = new SpecialModel(vehicle, s);
+			SpecialModel vm = new SpecialModel(s);
 			if (s.getScope().contains(id)) {
 				if (s.getDiscountValue() > 0) {
 					float newPrice = (price - s.getDiscountValue());
